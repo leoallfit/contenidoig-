@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AllFit — Plan de Reels 1 Mes</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --card: #111111;
+    --card2: #161616;
+    --orange: #e8500a;
+    --gold: #f5a623;
+    --white: #f0ede8;
+    --muted: #666;
+    --border: #222;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding: 0 0 80px;
+  }
+
+  /* HEADER */
+  header {
+    background: #0a0a0a;
+    border-bottom: 1px solid var(--border);
+    padding: 28px 24px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+
+  .brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 3px;
+    color: var(--orange);
+  }
+
+  .badge {
+    background: var(--orange);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+  }
+
+  .header-sub {
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.3px;
+  }
+
+  /* WEEK TABS */
+  .tabs {
+    display: flex;
+    gap: 8px;
+    padding: 20px 24px 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+
+  .tab {
+    flex-shrink: 0;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 15px;
+    letter-spacing: 2px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .tab.active {
+    background: var(--orange);
+    border-color: var(--orange);
+    color: #fff;
+  }
+
+  .tab:hover:not(.active) {
+    border-color: var(--orange);
+    color: var(--white);
+  }
+
+  /* WEEK CONTENT */
+  .week-panel { display: none; padding: 20px 24px 0; }
+  .week-panel.active { display: block; }
+
+  .week-header {
+    margin-bottom: 20px;
+  }
+
+  .week-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 3px;
+    line-height: 1;
+    color: var(--white);
+  }
+
+  .week-title span { color: var(--orange); }
+
+  .week-desc {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  /* SCRIPT CARD */
+  .script-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .script-card:hover { border-color: #333; }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 18px 18px 14px;
+    cursor: pointer;
+    gap: 12px;
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .day-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    background: var(--card2);
+    padding: 4px 9px;
+    border-radius: 6px;
+  }
+
+  .module-tag {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: rgba(245,166,35,0.1);
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+
+  .card-title-block { flex: 1; }
+
+  .card-hook {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--white);
+    line-height: 1.4;
+    margin-bottom: 4px;
+  }
+
+  .card-type {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .toggle-icon {
+    font-size: 18px;
+    color: var(--muted);
+    transition: transform 0.25s;
+    flex-shrink: 0;
+    line-height: 1;
+    margin-top: 2px;
+  }
+
+  .script-card.open .toggle-icon { transform: rotate(45deg); color: var(--orange); }
+
+  /* SCRIPT BODY */
+  .card-body {
+    display: none;
+    padding: 0 18px 18px;
+  }
+
+  .script-card.open .card-body { display: block; }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin-bottom: 16px;
+  }
+
+  .script-block {
+    background: var(--card2);
+    border-left: 3px solid var(--orange);
+    border-radius: 0 10px 10px 0;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+
+  .script-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 8px;
+  }
+
+  .script-text {
+    font-size: 14px;
+    color: #c8c4be;
+    line-height: 1.7;
+    white-space: pre-wrap;
+  }
+
+  .cta-block {
+    background: rgba(232,80,10,0.08);
+    border: 1px solid rgba(232,80,10,0.3);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-top: 12px;
+  }
+
+  .cta-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 6px;
+  }
+
+  .cta-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--white);
+  }
+
+  .copy-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+    background: var(--orange);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .copy-btn:hover { opacity: 0.85; }
+  .copy-btn.copied { background: #2a7a2a; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="brand">ALLFIT</div>
+    <div class="badge">20 Reels · 4 Semanas</div>
+  </div>
+  <div class="header-sub">Scripts para hablar a cámara · Hombres que quieren ganar masa muscular</div>
+</header>
+
+<div class="tabs" id="tabs">
+  <div class="tab active" onclick="showWeek(0)">SEMANA 1</div>
+  <div class="tab" onclick="showWeek(1)">SEMANA 2</div>
+  <div class="tab" onclick="showWeek(2)">SEMANA 3</div>
+  <div class="tab" onclick="showWeek(3)">SEMANA 4</div>
+</div>
+
+<div id="weeks"></div>
+
+<script>
+const weeks = [
+  {
+    title: "SEMANA <span>1</span>",
+    desc: "Módulos 01-03 · Las bases: por qué no crecés y qué necesitás cambiar",
+    scripts: [
+      {
+        day: "DÍA 1",
+        module: "Módulo 01",
+        type: "Desmitificación",
+        hook: "El músculo no crece porque lo castigás. Crece porque lo estimulás.",
+        keyword: "MASA",
+        hook_full: "El músculo no crece porque lo castigás. Crece porque lo estimulás.",
+        desarrollo: `Mucha gente entrena convencida de que cuanto más le duele y más agotado queda, mejor fue el entrenamiento.
+
+Eso está mal.
+
+El músculo crece cuando lo exponés a una tensión suficiente, cerca del fallo, de forma repetida semana a semana.
+
+No necesitás destruirte. Necesitás aplicar el estímulo correcto y darle tiempo para recuperarse.
+
+Si entrenás duro pero sin criterio, tu cuerpo se adapta al estrés... pero no en la dirección que querés.`,
+        cta: `Si querés entender exactamente qué necesita tu cuerpo para crecer, mandame MASA por DM y te explico cómo trabajo.`
+      },
+      {
+        day: "DÍA 2",
+        module: "Módulo 01",
+        type: "Educativo",
+        hook: "¿Qué es entrenar con suficiente intensidad? (La mayoría ni se acerca)",
+        keyword: "MASA",
+        hook_full: "¿Qué es entrenar con suficiente intensidad? La mayoría ni se acerca, y ese es el problema.",
+        desarrollo: `Cuando hablo de intensidad no me refiero a sudar, gritar o quedarte tirado en el piso.
+
+Intensidad en hipertrofia significa qué tan cerca del fallo llegás en cada serie.
+
+El fallo muscular es el punto donde ya no podés hacer ni una repetición más con buena técnica.
+
+La mayoría de los tipos que van al gym se quedan entre 5 y 8 repeticiones lejos del fallo en cada serie.
+
+¿El resultado? El músculo recibe un estímulo tan bajo que no tiene razón para crecer.
+
+Aprender a medir tu intensidad es lo que diferencia a alguien que progresa del que lleva años estancado.`,
+        cta: `Si estás entrenando hace tiempo y no ves resultados, mandame MASA y hablamos.`
+      },
+      {
+        day: "DÍA 3",
+        module: "Módulo 02",
+        type: "Educativo",
+        hook: "Llevás meses entrenando el mismo músculo... pero con 4 ejercicios que hacen lo mismo.",
+        keyword: "CAMBIO",
+        hook_full: "Llevás meses entrenando el mismo músculo... pero con 4 ejercicios que hacen exactamente lo mismo.",
+        desarrollo: `Esto pasa más de lo que creés.
+
+Hay patrones de movimiento básicos: empuje, tracción, bisagra, sentadilla, carry.
+
+Cada ejercicio que hacés cae en uno de esos patrones.
+
+Si hacés press plano, press inclinado, press declinado y aperturas en el mismo entrenamiento de pecho... estás sobreentrenando el mismo patrón y dejando músculo sin trabajar.
+
+Entender esto te permite construir entrenamientos completos, no solo rutinas que se ven bien en papel.`,
+        cta: `Si querés armar una rutina que realmente cubra todos tus músculos, mandame CAMBIO.`
+      },
+      {
+        day: "DÍA 4",
+        module: "Módulo 03",
+        type: "Mito / Error común",
+        hook: "Más series NO siempre es mejor. Hay un límite, y la mayoría lo pasa sin saberlo.",
+        keyword: "MASA",
+        hook_full: "Más series NO siempre es mejor. Hay un límite a partir del cual estás gastando energía sin ganar músculo.",
+        desarrollo: `El volumen de entrenamiento —la cantidad de series que hacés por grupo muscular— tiene un rango óptimo.
+
+Abajo del mínimo: no hay suficiente estímulo para crecer.
+Arriba del máximo: el cuerpo no puede recuperarse y dejás de progresar.
+
+La ciencia sugiere algo así como 10 a 20 series semanales por músculo como punto de partida, dependiendo del nivel.
+
+El problema es que muchos tipos hacen 30 o 40 series semanales de pecho porque más siempre pareció mejor.
+
+Y llevan meses sin moverse de los mismos pesos.`,
+        cta: `Si querés saber exactamente cuántas series necesitás, mandame MASA.`
+      },
+      {
+        day: "DÍA 5",
+        module: "Módulo 03",
+        type: "Relatable / conversacional",
+        hook: "¿Cuántas veces cambiaste de rutina pensando que eso iba a solucionar todo?",
+        keyword: "CAMBIO",
+        hook_full: "¿Cuántas veces cambiaste de rutina pensando que eso iba a solucionar todo?",
+        desarrollo: `El problema no es la rutina. Es que nadie te enseñó a saber si estás haciendo suficiente.
+
+¿Cuántas series necesito por músculo?
+¿Estoy haciendo demasiado o muy poco?
+¿Cuándo tiene sentido cambiar un ejercicio?
+
+Son preguntas básicas que la mayoría nunca se responde.
+
+Cambian de rutina, de split, de entrenador de YouTube... y siguen igual.
+
+Cuando aprendés a entender el volumen, dejás de necesitar el siguiente programa milagroso.`,
+        cta: `Si querés entender de una vez cómo estructurar tu entrenamiento, mandame CAMBIO por DM.`
+      }
+    ]
+  },
+  {
+    title: "SEMANA <span>2</span>",
+    desc: "Módulos 04-06 · Frecuencia, splits y cómo elegir tus ejercicios",
+    scripts: [
+      {
+        day: "DÍA 1",
+        module: "Módulo 04",
+        type: "Educativo",
+        hook: "¿Cuántas veces por semana deberías entrenar cada músculo? La respuesta te va a sorprender.",
+        keyword: "MASA",
+        hook_full: "¿Cuántas veces por semana deberías entrenar cada músculo? La respuesta te va a sorprender.",
+        desarrollo: `La mayoría entrena pecho los lunes y no lo vuelve a tocar hasta la semana siguiente.
+
+Eso es frecuencia 1. Y para ganar masa muscular, casi siempre es subóptimo.
+
+Un músculo tarda entre 48 y 72 horas en recuperarse. Después de eso, si no lo volvés a estimular, el efecto anabólico desaparece.
+
+Entrenar cada músculo al menos 2 veces por semana es, en general, más efectivo para hipertrofia.
+
+No porque hagás más volumen total, sino porque distribuís ese volumen de forma más inteligente.`,
+        cta: `Si querés saber cómo distribuir tus días de entrenamiento para maximizar resultados, mandame MASA.`
+      },
+      {
+        day: "DÍA 2",
+        module: "Módulo 05",
+        type: "Desmitificación",
+        hook: "Push Pull Legs no es un método. Es solo una etiqueta. Acá te explico la diferencia.",
+        keyword: "CAMBIO",
+        hook_full: "Push Pull Legs no es un método de entrenamiento. Es solo una etiqueta. Y entender eso cambia todo.",
+        desarrollo: `Un split no determina si vas a crecer o no.
+
+Push Pull Legs, torso/pierna, fullbody... ninguno es mejor que el otro por sí mismo.
+
+Lo que determina los resultados es si el split que elegís te permite cubrir el volumen semanal necesario para cada músculo, con la frecuencia adecuada, y encima se adapta a los días que realmente podés entrenar.
+
+Si hacés PPL con 6 días pero solo podés ir 3... ese split está mal elegido para vos.
+
+El mejor split es el que podés sostener en el tiempo.`,
+        cta: `Si querés armar un split que se ajuste a tu vida y tus objetivos, mandame CAMBIO.`
+      },
+      {
+        day: "DÍA 3",
+        module: "Módulo 06",
+        type: "Educativo",
+        hook: "¿Por qué un ejercicio que te funciona a otro no le sirve para nada? Esto lo explica todo.",
+        keyword: "MASA",
+        hook_full: "¿Por qué un ejercicio que le funciona a alguien no necesariamente te va a funcionar a vos?",
+        desarrollo: `La selección de ejercicios no es universal.
+
+Hay 5 factores que determinan si un ejercicio es bueno para vos: tensión muscular, rango de movimiento, carga en el punto de máxima contracción, sensación de conexión, y si te genera dolor articular.
+
+Un ejercicio técnicamente correcto puede no ser el mejor para tu anatomía, tu movilidad o tu nivel actual.
+
+Por eso copiar la rutina del que más músculo tiene en el gym no siempre funciona.
+
+Aprender a evaluar ejercicios con esos criterios te hace independiente de cualquier programa.`,
+        cta: `Si querés saber cómo elegir los ejercicios correctos para tu cuerpo, mandame MASA.`
+      },
+      {
+        day: "DÍA 4",
+        module: "Módulo 06",
+        type: "Mito",
+        hook: "\"Más difícil\" no significa \"mejor\". Uno de los errores más comunes en el gym.",
+        keyword: "CAMBIO",
+        hook_full: "Hacer el ejercicio más difícil no te garantiza mejores resultados. De hecho, muchas veces es al revés.",
+        desarrollo: `Hay una creencia muy extendida de que si un ejercicio es incómodo, complicado o te requiere mucho equilibrio, tiene que ser más efectivo.
+
+No es así.
+
+Un ejercicio es bueno cuando te permite aplicar alta tensión al músculo objetivo, cerca del fallo, con control.
+
+Si un ejercicio es tan técnico que perdés la conexión con el músculo, o tan inestable que tu sistema nervioso está ocupado en no caerte... el estímulo muscular cae a la mitad.
+
+Las máquinas, por ejemplo, son herramientas muy válidas para hipertrofia. No son para débiles.`,
+        cta: `Si querés que te ayude a elegir los ejercicios correctos para tu objetivo, mandame CAMBIO.`
+      },
+      {
+        day: "DÍA 5",
+        module: "Módulo 04",
+        type: "Relatable",
+        hook: "Entrenás todos los días pero no crecés. Quizás el problema no es la cantidad, sino cuándo.",
+        keyword: "MASA",
+        hook_full: "Si entrenás todos los días y no ves resultados, quizás el problema no es cuánto entrenás sino cuándo lo hacés.",
+        desarrollo: `Descanso no es pereza. Es parte del proceso.
+
+Un músculo necesita tiempo para recuperarse y supercompensarse. Si lo volvés a entrenar antes de que eso pase, interrumpís el proceso.
+
+Acumular fatiga sin dejar que el cuerpo procese el estímulo es una receta para el estancamiento.
+
+Más entrenamiento no siempre suma. A veces resta.
+
+Saber cuánto descanso necesita cada músculo es tan importante como saber cuánto entrenarlo.`,
+        cta: `Mandame MASA si querés un programa diseñado para que tu cuerpo realmente crezca.`
+      }
+    ]
+  },
+  {
+    title: "SEMANA <span>3</span>",
+    desc: "Módulos 07-10 · Repeticiones, descanso, técnicas y sobrecarga progresiva",
+    scripts: [
+      {
+        day: "DÍA 1",
+        module: "Módulo 07",
+        type: "Desmitificación",
+        hook: "8-12 reps para hipertrofia. Te dijeron eso y nunca cuestionaste por qué.",
+        keyword: "MASA",
+        hook_full: "8 a 12 repeticiones para hipertrofia. Te lo dijeron como una ley y nunca nadie te explicó por qué, ni si es verdad.",
+        desarrollo: `La realidad es que el rango de repeticiones no determina si crecés o no.
+
+Lo que determina si crecés es que estés cerca del fallo en esa serie, con suficiente tensión en el músculo.
+
+Podés hacer 5 repeticiones con mucho peso o 20 con menos peso y crecer igual, siempre que el esfuerzo relativo sea alto.
+
+El rango de 8 a 12 es cómodo porque permite buenos pesos y buena técnica, pero no es el único que funciona.
+
+Saber esto te da mucha más libertad y te permite entrenar mejor sin obsesionarte con el número.`,
+        cta: `Si querés que te explique cómo estructurar tus series para maximizar el crecimiento, mandame MASA.`
+      },
+      {
+        day: "DÍA 2",
+        module: "Módulo 08",
+        type: "Educativo",
+        hook: "¿Cuánto descansar entre series? No es 1 minuto ni 5. Depende de esto.",
+        keyword: "CAMBIO",
+        hook_full: "¿Cuánto tenés que descansar entre series? No hay un número único. Depende de algo que casi nadie considera.",
+        desarrollo: `El descanso entre series tiene un objetivo claro: que puedas rendir al máximo en la siguiente.
+
+Si descansás poco, llegás fatigado a la próxima serie y el estímulo baja.
+Si descansás mucho, el entrenamiento se alarga innecesariamente.
+
+Para ejercicios compuestos pesados —sentadilla, press, dominadas— 2 a 3 minutos son razonables.
+Para ejercicios de aislamiento, 60 a 90 segundos suele alcanzar.
+
+La señal real para empezar la siguiente serie es cuando sientas que podés rendir igual o mejor que la anterior. No el cronómetro.`,
+        cta: `Mandame CAMBIO si querés que te ayude a estructurar tus entrenamientos de forma más inteligente.`
+      },
+      {
+        day: "DÍA 3",
+        module: "Módulo 09",
+        type: "Educativo",
+        hook: "Drop sets, rest-pause, superseries... ¿sirven o son marketing del gym?",
+        keyword: "MASA",
+        hook_full: "Drop sets, rest-pause, superseries... ¿realmente sirven para ganar músculo o son solo para verse intenso en el gym?",
+        desarrollo: `Sirven. Pero no como las usan la mayoría.
+
+Las técnicas de intensificación son herramientas para agregar estímulo cuando ya no podés agregar más series directas.
+
+Un drop set bien hecho puede darte series adicionales efectivas en poco tiempo.
+Un rest-pause te permite seguir entrenando cerca del fallo con menos tiempo de recuperación total.
+
+El problema es cuando se usan desde el primer ejercicio, en cada serie, sin base de volumen real.
+
+Son el toque final, no la base del entrenamiento.`,
+        cta: `Si querés saber cuándo y cómo usarlas, mandame MASA y hablamos.`
+      },
+      {
+        day: "DÍA 4",
+        module: "Módulo 10",
+        type: "Educativo",
+        hook: "¿Tenés que subir de peso cada semana para progresar? No. Pero sí necesitás hacer esto.",
+        keyword: "CAMBIO",
+        hook_full: "Mucha gente cree que si no sube el peso cada semana no está progresando. Eso es falso. Pero sí hay algo que necesitás hacer.",
+        desarrollo: `La sobrecarga progresiva no significa subir kilos obligatoriamente en cada sesión.
+
+Significa que con el tiempo el músculo recibe más estímulo que antes.
+
+Podés progresar haciendo más repeticiones con el mismo peso.
+Podés progresar mejorando la técnica y sintiendo más el músculo.
+Podés progresar acortando el descanso, agregando una serie, o mejorando el rango de movimiento.
+
+Lo que no podés hacer es entrenar exactamente igual semana tras semana y esperar crecer.
+
+El cuerpo se adapta al estímulo que recibe. Si ese estímulo no cambia, el cuerpo no tiene razón para cambiar.`,
+        cta: `Mandame CAMBIO si querés un sistema de entrenamiento donde puedas medir tu progreso semana a semana.`
+      },
+      {
+        day: "DÍA 5",
+        module: "Módulo 10",
+        type: "Relatable",
+        hook: "Dos años entrenando con los mismos pesos. Esto es lo que probablemente está pasando.",
+        keyword: "MASA",
+        hook_full: "Dos años en el gym. Los mismos pesos que el primer mes. Esto es lo que probablemente está pasando.",
+        desarrollo: `No es falta de esfuerzo. En la mayoría de los casos es falta de progresión.
+
+Si tu cuerpo ya se adaptó a lo que hacés y no hay nada que lo obligue a cambiar... no cambia.
+
+La sobrecarga progresiva es el mecanismo principal de crecimiento muscular a largo plazo.
+
+Sin un sistema para medir y aumentar el estímulo de forma ordenada, podés entrenar muchos años y quedarte exactamente igual.
+
+Esto no es un problema de genética ni de metabolismo. Es un problema de método.`,
+        cta: `Si llevás tiempo sin ver resultados, mandame MASA y miramos qué está pasando.`
+      }
+    ]
+  },
+  {
+    title: "SEMANA <span>4</span>",
+    desc: "Módulos 11-14 · Técnica, progresiones, calentamiento y cardio",
+    scripts: [
+      {
+        day: "DÍA 1",
+        module: "Módulo 11",
+        type: "Desmitificación",
+        hook: "Mala técnica no es solo estética. Es la razón por la que no sentís el músculo.",
+        keyword: "CAMBIO",
+        hook_full: "Mala técnica no es solo una cuestión estética o de lesiones. Es la razón por la que no sentís el músculo que querés trabajar.",
+        desarrollo: `Cuando la técnica falla, otros músculos compensan.
+
+Hacés remo y en vez de sentir la espalda, lo sentís todo en el bíceps.
+Hacés press y el hombro es el que carga.
+
+Eso no significa que estés débil. Significa que el patrón de movimiento no está bien aprendido.
+
+La técnica no es para parecer profesional. Es para que el músculo que querés estimular sea el que realmente recibe la tensión.
+
+Movilidad, respiración y control de la carga son los tres pilares de una buena técnica.`,
+        cta: `Si querés que revisemos tu técnica y ajustemos tu entrenamiento, mandame CAMBIO.`
+      },
+      {
+        day: "DÍA 2",
+        module: "Módulo 12",
+        type: "Educativo",
+        hook: "No podés hacer sentadilla. Bien. ¿Sabés qué hacer en vez de abandonarla?",
+        keyword: "MASA",
+        hook_full: "No podés hacer sentadilla completa, o el press de banca te duele el hombro. ¿Sabés qué hacer en esos casos?",
+        desarrollo: `La mayoría de los tipos frente a un ejercicio que les cuesta tienen dos opciones: hacerlo igual y lesionarse, o dejarlo y perder ese estímulo.
+
+Hay una tercera opción: las progresiones, regresiones y adaptaciones.
+
+Una regresión es una versión más simple del ejercicio que sí podés ejecutar bien ahora.
+Una progresión te lleva hacia una versión más desafiante cuando estás listo.
+Una adaptación modifica el ejercicio para que se adapte a tus limitaciones físicas.
+
+Saber usar estas tres herramientas te permite siempre entrenar bien, sin importar tu nivel o restricciones.`,
+        cta: `Mandame MASA si querés un programa adaptado a lo que vos podés hacer hoy.`
+      },
+      {
+        day: "DÍA 3",
+        module: "Módulo 13",
+        type: "Error común",
+        hook: "El calentamiento no es caminar 5 minutos en la cinta. Esto es lo que tenés que hacer.",
+        keyword: "CAMBIO",
+        hook_full: "El calentamiento no es caminar 5 minutos en la cinta ni estirar 30 segundos. Esto es lo que realmente necesitás hacer.",
+        desarrollo: `Un buen calentamiento tiene dos objetivos: preparar las articulaciones y el sistema nervioso para el ejercicio que viene, y activar los músculos que vas a trabajar.
+
+¿Cómo? Depende del ejercicio.
+
+Si vas a hacer sentadilla, tiene sentido hacer movilidad de cadera, activación de glúteos y series de aproximación con poco peso.
+
+Si vas a hacer press de banca, trabajás movilidad torácica, activación de rotadores del hombro y series de entrada.
+
+Calentar genérico antes de entrenar específico es tiempo que no suma nada.`,
+        cta: `Si querés que te muestre cómo estructurar tus entrenamientos de punta a punta, mandame CAMBIO.`
+      },
+      {
+        day: "DÍA 4",
+        module: "Módulo 14",
+        type: "Desmitificación",
+        hook: "¿El cardio te hace perder músculo? La respuesta honesta.",
+        keyword: "MASA",
+        hook_full: "¿El cardio te hace perder músculo? Esta es la respuesta honesta.",
+        desarrollo: `Depende de cómo lo hacés.
+
+El cardio mal programado puede interferir con la ganancia muscular. Demasiado volumen, demasiada intensidad, justo antes de entrenar fuerza, con déficit calórico marcado.
+
+Pero el cardio bien programado no solo no te hace perder músculo, sino que mejora tu recuperación, tu salud cardiovascular y tu capacidad de entrenar con más intensidad a largo plazo.
+
+La clave es el tipo de cardio, cuándo lo hacés y cuánto hacés.
+
+El cardio no es el enemigo de la masa muscular. La desinformación sí.`,
+        cta: `Si querés saber cómo integrar el cardio sin comprometer tus resultados, mandame MASA.`
+      },
+      {
+        day: "DÍA 5",
+        module: "Módulos 01-14",
+        type: "Cierre / Conversión",
+        hook: "14 temas que nadie te enseñó pero que definen si vas a crecer o a seguir igual.",
+        keyword: "CAMBIO",
+        hook_full: "14 temas que nadie te enseñó en el gym pero que son los que determinan si vas a crecer músculo o a quedarte igual por siempre.",
+        desarrollo: `Hipertrofia real. Patrones de movimiento. Volumen óptimo. Frecuencia. Splits. Selección de ejercicios. Rangos de repeticiones. Descanso entre series. Técnicas de intensificación. Sobrecarga progresiva. Técnica. Progresiones. Calentamiento. Cardio.
+
+Todo esto no es teoría de libro. Es lo que separa a alguien que entrena de alguien que progresa.
+
+Yo lo aprendí estudiando, certificándome, y aplicándolo. Primero en mí. Después en mis clientes.
+
+Si llevás tiempo entrenando sin ver los resultados que esperabas, no es tu culpa. Es que nadie te dio las herramientas correctas.`,
+        cta: `Si estás listo para entrenar con un sistema real, mandame CAMBIO por DM y hablamos.`
+      }
+    ]
+  }
+];
+
+function showWeek(index) {
+  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === index));
+  document.querySelectorAll('.week-panel').forEach((p, i) => p.classList.toggle('active', i === index));
+}
+
+function buildWeeks() {
+  const container = document.getElementById('weeks');
+  weeks.forEach((week, wi) => {
+    const panel = document.createElement('div');
+    panel.className = 'week-panel' + (wi === 0 ? ' active' : '');
+
+    let html = `<div class="week-header">
+      <div class="week-title">${week.title}</div>
+      <div class="week-desc">${week.desc}</div>
+    </div>`;
+
+    week.scripts.forEach((s, si) => {
+      const id = `card-${wi}-${si}`;
+      html += `
+      <div class="script-card" id="${id}">
+        <div class="card-header" onclick="toggleCard('${id}')">
+          <div class="card-meta">
+            <span class="day-num">${s.day}</span>
+            <span class="module-tag">${s.module}</span>
+          </div>
+          <div class="card-title-block">
+            <div class="card-hook">${s.hook}</div>
+            <div class="card-type">${s.type}</div>
+          </div>
+          <span class="toggle-icon">+</span>
+        </div>
+        <div class="card-body">
+          <div class="divider"></div>
+          <div class="script-block">
+            <div class="script-label">🎬 HOOK (primeras 3 seg)</div>
+            <div class="script-text">${s.hook_full}</div>
+          </div>
+          <div class="script-block">
+            <div class="script-label">📢 DESARROLLO</div>
+            <div class="script-text">${s.desarrollo.trim()}</div>
+          </div>
+          <div class="cta-block">
+            <div class="cta-label">💬 CTA — Keyword: ${s.keyword}</div>
+            <div class="cta-text">${s.cta}</div>
+          </div>
+          <button class="copy-btn" onclick="copyScript('${id}', this)">
+            📋 Copiar script completo
+          </button>
+        </div>
+      </div>`;
+    });
+
+    panel.innerHTML = html;
+    container.appendChild(panel);
+  });
+}
+
+function toggleCard(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+function copyScript(id, btn) {
+  const card = document.getElementById(id);
+  const hook = card.querySelector('.script-block:nth-child(2) .script-text').innerText;
+  const dev = card.querySelector('.script-block:nth-child(3) .script-text').innerText;
+  const cta = card.querySelector('.cta-text').innerText;
+  const text = `HOOK:\n${hook}\n\nDESARROLLO:\n${dev}\n\nCTA:\n${cta}`;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copiado';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '📋 Copiar script completo'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+buildWeeks();
+</script>
+</body>
+</html>
